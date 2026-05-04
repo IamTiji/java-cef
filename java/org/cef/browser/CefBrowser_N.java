@@ -582,7 +582,7 @@ public abstract class CefBrowser_N extends CefNativeAdapter implements CefBrowse
      * Send a key event.
      * @param e The event to send.
      */
-    protected final void sendKeyEvent(CefKeyEvent e) {
+    public final void sendKeyEvent(CefKeyEvent e) {
         try {
             N_SendKeyEvent(e);
         } catch (UnsatisfiedLinkError ule) {
@@ -594,7 +594,7 @@ public abstract class CefBrowser_N extends CefNativeAdapter implements CefBrowse
      * Send a mouse event.
      * @param e The event to send.
      */
-    protected final void sendMouseEvent(CefMouseEvent e) {
+    public final void sendMouseEvent(CefMouseEvent e) {
         try {
             N_SendMouseEvent(e);
         } catch (UnsatisfiedLinkError ule) {
@@ -606,7 +606,7 @@ public abstract class CefBrowser_N extends CefNativeAdapter implements CefBrowse
      * Send a mouse wheel event.
      * @param e The event to send.
      */
-    protected final void sendMouseWheelEvent(CefMouseWheelEvent e) {
+    public final void sendMouseWheelEvent(CefMouseWheelEvent e) {
         try {
             N_SendMouseWheelEvent(e);
         } catch (UnsatisfiedLinkError ule) {
@@ -623,7 +623,7 @@ public abstract class CefBrowser_N extends CefNativeAdapter implements CefBrowse
      * CefRenderHandler::StartDragging).
      * This method is only used when window rendering is disabled.
      */
-    protected final void dragTargetDragEnter(
+    public final void dragTargetDragEnter(
             CefDragData dragData, Point pos, int modifiers, int allowedOps) {
         try {
             N_DragTargetDragEnter(dragData, pos, modifiers, allowedOps);
@@ -638,7 +638,7 @@ public abstract class CefBrowser_N extends CefNativeAdapter implements CefBrowse
      * DragTargetDragLeave/DragTargetDrop).
      * This method is only used when window rendering is disabled.
      */
-    protected final void dragTargetDragOver(Point pos, int modifiers, int allowedOps) {
+    public final void dragTargetDragOver(Point pos, int modifiers, int allowedOps) {
         try {
             N_DragTargetDragOver(pos, modifiers, allowedOps);
         } catch (UnsatisfiedLinkError ule) {
@@ -651,7 +651,7 @@ public abstract class CefBrowser_N extends CefNativeAdapter implements CefBrowse
      * calling DragTargetDragEnter).
      * This method is only used when window rendering is disabled.
      */
-    protected final void dragTargetDragLeave() {
+    public final void dragTargetDragLeave() {
         try {
             N_DragTargetDragLeave();
         } catch (UnsatisfiedLinkError ule) {
@@ -666,7 +666,7 @@ public abstract class CefBrowser_N extends CefNativeAdapter implements CefBrowse
      * the previous DragTargetDragEnter call.
      * This method is only used when window rendering is disabled.
      */
-    protected final void dragTargetDrop(Point pos, int modifiers) {
+    public final void dragTargetDrop(Point pos, int modifiers) {
         try {
             N_DragTargetDrop(pos, modifiers);
         } catch (UnsatisfiedLinkError ule) {
@@ -683,7 +683,7 @@ public abstract class CefBrowser_N extends CefNativeAdapter implements CefBrowse
      * DragSource* methods.
      * This method is only used when window rendering is disabled.
      */
-    protected final void dragSourceEndedAt(Point pos, int operation) {
+    public final void dragSourceEndedAt(Point pos, int operation) {
         try {
             N_DragSourceEndedAt(pos, operation);
         } catch (UnsatisfiedLinkError ule) {
@@ -700,7 +700,7 @@ public abstract class CefBrowser_N extends CefNativeAdapter implements CefBrowse
      * methods.
      * This method is only used when window rendering is disabled.
      */
-    protected final void dragSourceSystemDragEnded() {
+    public final void dragSourceSystemDragEnded() {
         try {
             N_DragSourceSystemDragEnded();
         } catch (UnsatisfiedLinkError ule) {
