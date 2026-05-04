@@ -43,6 +43,9 @@ public abstract class CefRenderHandlerAdapter implements CefRenderHandler {
             ByteBuffer buffer, int width, int height) {}
 
     @Override
+    public void onAcceleratedPaint(CefBrowser browser, boolean popup, Rectangle[] dirtyRects, long sharedHandle) {}
+
+    @Override
     public boolean onCursorChange(CefBrowser browser, int cursorType) {
         return false;
     }

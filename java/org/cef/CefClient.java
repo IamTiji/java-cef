@@ -683,6 +683,15 @@ public class CefClient extends CefClientHandler
         if (realHandler != null)
             realHandler.onPaint(browser, popup, dirtyRects, buffer, width, height);
     }
+    
+    @Override
+    public void onAcceleratedPaint(CefBrowser browser, boolean popup, Rectangle[] dirtyRects, long sharedHandle) {
+        if (browser == null) return;
+
+        CefRenderHandler realHandler = browser.getRenderHandler();
+        if (realHandler != null)
+            realHandler.onAcceleratedPaint(browser, popup, dirtyRects, sharedHandle);
+    }
 
     @Override
     public boolean startDragging(CefBrowser browser, CefDragData dragData, int mask, int x, int y) {

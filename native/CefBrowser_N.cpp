@@ -1003,6 +1003,9 @@ void create(std::shared_ptr<JNIObjectsForCreate> objs,
 
   CefWindowInfo windowInfo;
   windowInfo.SetAsWindowless((CefWindowHandle)windowHandle);
+  // It can be hardcoded because it won't have 
+  // effect if `--shared-texture-enabled` isn't set
+  windowInfo.shared_texture_enabled = true;  
 
   CefBrowserSettings settings;
 

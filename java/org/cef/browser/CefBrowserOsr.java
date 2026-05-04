@@ -84,6 +84,10 @@ public class CefBrowserOsr extends CefBrowser_N implements CefRenderHandler {
     }
 
     @Override
+    public void onAcceleratedPaint(CefBrowser browser, boolean popup, Rectangle[] dirtyRects, long sharedHandle) {
+    }
+
+    @Override
     public boolean onCursorChange(CefBrowser browser, final int cursorType) {
         return true;
     }

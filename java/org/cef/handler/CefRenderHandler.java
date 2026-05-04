@@ -66,6 +66,16 @@ public interface CefRenderHandler {
             ByteBuffer buffer, int width, int height);
 
     /**
+     * Handle painting with texture handle
+     * @param browser The browser generating the event.
+     * @param popup True if painting a popup window.
+     * @param dirtyRects Array of dirty regions.
+     * @param textureHandle Handle to the full texture.
+     */
+    public void onAcceleratedPaint(CefBrowser browser, boolean popup, Rectangle[] dirtyRects,
+            long sharedHandle);
+
+    /**
      * Handle cursor changes.
      * @param browser The browser generating the event.
      * @param cursorType The new cursor type.

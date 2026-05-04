@@ -270,6 +270,28 @@ void RenderHandler::OnPaint(CefRefPtr<CefBrowser> browser,
                        jdirectBuffer.get(), width, height);
 }
 
+void RenderHandler::OnAcceleratedPaint(CefRefPtr<CefBrowser> browser,
+                                       PaintElementType type,
+                                       const RectList& dirtyRects,
+                                       void* shared_handle) {
+  ScopedJNIEnv env;
+  if (!env)
+    return;
+  
+  if (!shared_handle)
+    return;
+
+  ScopedJNIBrowser jbrowser(env, browser);
+  jboolean jtype = type == PET_VIEW ? JNI_FALSE : JNI_TRUE;
+  ScopedJNIObjectLocal jrectArray(env, NewJNIRectArray(env, dirtyRects));
+  jlong jsharedHandle = reinterpret_cast<jlong>(shared_handle);
+
+  JNI_CALL_VOID_METHOD(env, handle_, "onAcceleratedPaint",
+                       "(Lorg/cef/browser/CefBrowser;Z[Ljava/awt/Rectangle;J)V",
+                      jbrowser.get(), jtype, jrectArray.get(),
+                      jsharedHandle);
+}
+
 bool RenderHandler::StartDragging(CefRefPtr<CefBrowser> browser,
                                   CefRefPtr<CefDragData> drag_data,
                                   DragOperationsMask allowed_ops,
