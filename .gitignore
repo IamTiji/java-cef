@@ -35,6 +35,7 @@
 .metadata
 .project
 .pydevproject
+build
 # Settings directory for eclipse
 /.settings
 .checkstyle
