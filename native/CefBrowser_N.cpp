@@ -1008,6 +1008,7 @@ void create(std::shared_ptr<JNIObjectsForCreate> objs,
   windowInfo.shared_texture_enabled = true;  
 
   CefBrowserSettings settings;
+  settings.windowless_frame_rate = 60;
 
   if (transparent == JNI_FALSE) {
     // Specify an opaque background color (white) to disable transparency.
