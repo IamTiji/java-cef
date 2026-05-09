@@ -1006,6 +1006,7 @@ void create(std::shared_ptr<JNIObjectsForCreate> objs,
   // It can be hardcoded because it won't have 
   // effect if `--shared-texture-enabled` isn't set
   windowInfo.shared_texture_enabled = true;  
+  windowInfo.windowless_rendering_enabled = true;
 
   CefBrowserSettings settings;
   settings.windowless_frame_rate = 60;
