@@ -439,6 +439,14 @@ JNIEXPORT void JNICALL Java_org_cef_browser_CefBrowser_1N_N_1UpdateUI
 JNIEXPORT void JNICALL Java_org_cef_browser_CefBrowser_1N_N_1NotifyMoveOrResizeStarted
   (JNIEnv *, jobject);
 
+/*
+ * Class:     org_cef_browser_CefBrowser_N
+ * Method:    N_SendExternalBeginFrame
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_org_cef_browser_CefBrowser_1N_N_1SendExternalBeginFrame
+  (JNIEnv *, jobject);
+
 #ifdef __cplusplus
 }
 #endif

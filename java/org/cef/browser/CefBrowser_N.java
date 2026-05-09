@@ -728,6 +728,14 @@ public abstract class CefBrowser_N extends CefNativeAdapter implements CefBrowse
         }
     }
 
+    protected final void sendExternalBeginFrame() {
+        try {
+            N_SendExternalBeginFrame();
+        } catch (UnsatisfiedLinkError ule) {
+            ule.printStackTrace();
+        }
+    }
+
     private final native boolean N_CreateBrowser(CefClientHandler clientHandler, long windowHandle,
             String url, boolean osr, boolean transparent,
             CefRequestContext context);
@@ -790,4 +798,5 @@ public abstract class CefBrowser_N extends CefNativeAdapter implements CefBrowse
     private final native void N_DragSourceSystemDragEnded();
     private final native void N_UpdateUI(Rectangle contentRect, Rectangle browserRect);
     private final native void N_NotifyMoveOrResizeStarted();
+    private final native void N_SendExternalBeginFrame();
 }
