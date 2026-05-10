@@ -55,7 +55,7 @@ public class CefBrowserOsr extends CefBrowser_N implements CefRenderHandler {
     }
 
     @Override
-    protected CefBrowser_N createDevToolsBrowser(CefClient client, String url, CefRequestContext context, CefBrowser_N parent, Point inspectAt) {
+    protected CefBrowser_N createDevToolsBrowser(CefClient client, String url, CefRequestContext context, CefBrowser_N parent, Point inspectAt, CefBrowserSettings settings) {
         return null;
     }
 
@@ -133,10 +133,10 @@ public class CefBrowserOsr extends CefBrowser_N implements CefRenderHandler {
         if (getNativeRef("CefBrowser") == 0) {
             if (getParentBrowser() != null) {
                 createDevTools(getParentBrowser(), getClient(), windowHandle, true, isTransparent_,
-                        getInspectAt());
+                        getInspectAt(), new CefBrowserSettings());
             } else {
                 createBrowser(getClient(), windowHandle, getUrl(), true, isTransparent_,
-                        getRequestContext());
+                        getRequestContext(), new CefBrowserSettings());
             }
         } else if (hasParent && justCreated_) {
             notifyAfterParentChanged();

@@ -986,10 +986,51 @@ struct JNIObjectsForCreate {
         jinspectAt(env, _jinspectAt) {}
 };
 
+CefBrowserSettings getBrowserSettings(JNIEnv* env, jobject settings) {
+  jclass settingsClass = env->FindClass("org/cef/browser/CefBrowserSettings");
+
+  if (!env) return CefBrowserSettings();
+  if (!env->IsInstanceOf(settings, settingsClass)) return CefBrowserSettings();
+
+  CefBrowserSettings result;
+
+  result.windowless_frame_rate = GetIntField(env, settings, "windowless_frame_rate");
+  
+  CefString(&result.standard_font_family)   = GetCefStringFromJNIString(env, GetStringField(env, settings, "standard_font_family"   )).GetStruct();
+  CefString(&result.fixed_font_family)      = GetCefStringFromJNIString(env, GetStringField(env, settings, "fixed_font_family"      )).GetStruct();
+  CefString(&result.serif_font_family)      = GetCefStringFromJNIString(env, GetStringField(env, settings, "serif_font_family"      )).GetStruct();
+  CefString(&result.sans_serif_font_family) = GetCefStringFromJNIString(env, GetStringField(env, settings, "sans_serif_font_family" )).GetStruct();
+  CefString(&result.cursive_font_family)    = GetCefStringFromJNIString(env, GetStringField(env, settings, "cursive_font_family"    )).GetStruct();
+  CefString(&result.fantasy_font_family)    = GetCefStringFromJNIString(env, GetStringField(env, settings, "fantasy_font_family"    )).GetStruct();
+
+  result.default_font_size         = GetIntField(env, settings, "default_font_size"        );
+  result.default_fixed_font_size   = GetIntField(env, settings, "default_fixed_font_size"  );
+  result.minimum_font_size         = GetIntField(env, settings, "minimum_font_size"        );
+  result.minimum_logical_font_size = GetIntField(env, settings, "minimum_logical_font_size");
+
+  CefString(&result.default_encoding)     = GetCefStringFromJNIString(env, GetStringField(env, settings, "default_encoding"        )).GetStruct();
+  CefString(&result.accept_language_list) = GetCefStringFromJNIString(env, GetStringField(env, settings, "accept_language_list"    )).GetStruct();
+
+  result.remote_fonts                = GetCefStateField(env, settings, "remote_fonts"               );
+  result.javascript                  = GetCefStateField(env, settings, "javascript"                 );
+  result.javascript_close_windows    = GetCefStateField(env, settings, "javascript_close_windows"   );
+  result.javascript_access_clipboard = GetCefStateField(env, settings, "javascript_access_clipboard");
+  result.javascript_dom_paste        = GetCefStateField(env, settings, "javascript_dom_paste"       );
+  result.image_loading               = GetCefStateField(env, settings, "image_loading"              );
+  result.text_area_resize            = GetCefStateField(env, settings, "text_area_resize"           );
+  result.tab_to_links                = GetCefStateField(env, settings, "tab_to_links"               );
+  result.local_storage               = GetCefStateField(env, settings, "local_storage"              );
+  result.databases                   = GetCefStateField(env, settings, "databases"                  );
+  result.webgl                       = GetCefStateField(env, settings, "webgl"                      );
+  
+  return result;
+}
+
 void create(std::shared_ptr<JNIObjectsForCreate> objs,
             jlong windowHandle,
             jboolean osr,
-            jboolean transparent) {
+            jboolean transparent,
+            jobject jsettings) {
   ScopedJNIEnv env;
   CefRefPtr<ClientHandler> clientHandler = GetCefFromJNIObject<ClientHandler>(
       env, objs->jclientHandler, "CefClientHandler");
@@ -1007,9 +1048,9 @@ void create(std::shared_ptr<JNIObjectsForCreate> objs,
   // effect if `--shared-texture-enabled` isn't set
   windowInfo.shared_texture_enabled = true;  
   windowInfo.windowless_rendering_enabled = true;
+  //windowInfo.external_begin_frame_enabled = true;
 
-  CefBrowserSettings settings;
-  settings.windowless_frame_rate = 60;
+  CefBrowserSettings settings = getBrowserSettings(env, jsettings);
 
   if (transparent == JNI_FALSE) {
     // Specify an opaque background color (white) to disable transparency.
@@ -1187,14 +1228,15 @@ Java_org_cef_browser_CefBrowser_1N_N_1CreateBrowser(JNIEnv* env,
                                                     jstring url,
                                                     jboolean osr,
                                                     jboolean transparent,
-                                                    jobject jcontext) {
+                                                    jobject jcontext,
+                                                    jobject settings) {
   std::shared_ptr<JNIObjectsForCreate> objs(new JNIObjectsForCreate(
       env, jbrowser, nullptr, jclientHandler, url, jcontext, nullptr));
   if (CefCurrentlyOn(TID_UI)) {
-    create(objs, windowHandle, osr, transparent);
+    create(objs, windowHandle, osr, transparent, settings);
   } else {
     CefPostTask(TID_UI,
-                base::BindOnce(&create, objs, windowHandle, osr, transparent));
+                base::BindOnce(&create, objs, windowHandle, osr, transparent, settings));
   }
   return JNI_FALSE;  // set asynchronously
 }
@@ -1207,15 +1249,16 @@ Java_org_cef_browser_CefBrowser_1N_N_1CreateDevTools(JNIEnv* env,
                                                      jlong windowHandle,
                                                      jboolean osr,
                                                      jboolean transparent,
-                                                     jobject inspect) {
+                                                     jobject inspect,
+                                                     jobject settings) {
   std::shared_ptr<JNIObjectsForCreate> objs(
       new JNIObjectsForCreate(env, jbrowser, jparent, jclientHandler, nullptr,
                               nullptr, inspect));
   if (CefCurrentlyOn(TID_UI)) {
-    create(objs, windowHandle, osr, transparent);
+    create(objs, windowHandle, osr, transparent, settings);
   } else {
     CefPostTask(TID_UI,
-                base::BindOnce(&create, objs, windowHandle, osr, transparent));
+                base::BindOnce(&create, objs, windowHandle, osr, transparent, settings));
   }
   return JNI_FALSE;  // set asynchronously
 }

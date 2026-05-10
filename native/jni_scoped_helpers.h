@@ -950,4 +950,9 @@ T* GetCefFromJNIObject(JNIEnv* env, jobject obj, const char* varName) {
   return nullptr;
 }
 
+int GetIntField(JNIEnv* env, jobject obj, const char* fieldName);
+CefString GetCefStringFromJNIString(JNIEnv* env, jstring jstr);
+jstring GetStringField(JNIEnv* env, jobject obj, const char* fieldName);
+cef_state_t GetCefStateField(JNIEnv* env, jobject obj, const char* fieldName);
+
 #endif  // JCEF_NATIVE_JNI_SCOPED_HELPERS_H_

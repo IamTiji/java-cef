@@ -462,3 +462,54 @@ ScopedJNIStringRef::ScopedJNIStringRef(JNIEnv* env, const CefString& value)
 ScopedJNIStringRef::operator CefString() const {
   return GetJNIStringRef(env_, jhandle_);
 }
+
+int GetIntField(JNIEnv* env, jobject obj, const char* fieldName) {
+  if (!obj) return 0;
+
+  jfieldID field = env->GetFieldID(env->GetObjectClass(obj), fieldName, "I");
+  if (!field) return 0;
+  return env->GetIntField(obj, field);
+}
+
+CefString GetCefStringFromJNIString(JNIEnv* env, jstring jstr) {
+  if (!jstr) return CefString();
+
+  jsize len = env->GetStringLength(jstr);
+  const jchar* str =  env->GetStringChars(jstr, nullptr);
+  if (!str) return CefString();
+  
+  CefString cefstr;
+  cefstr.FromString16(reinterpret_cast<const char16_t*>(str), len);
+  
+  env->ReleaseStringChars(jstr, str);
+  return cefstr;
+}
+
+jstring GetStringField(JNIEnv* env, jobject obj, const char* fieldName) {
+  if (!obj) return nullptr;
+  jfieldID field = env->GetFieldID(env->GetObjectClass(obj), fieldName, "Ljava/lang/String;");
+  if (!field) return nullptr;
+  return (jstring) env->GetObjectField(obj, field);
+}
+
+cef_state_t GetCefStateField(JNIEnv* env, jobject obj, const char* fieldName) {
+  if (!obj) return STATE_DEFAULT;
+  jfieldID field = env->GetFieldID(env->GetObjectClass(obj), fieldName, "Lorg/cef/browser/CefBrowserSettings$CefState;");
+  if (!field) return STATE_DEFAULT;
+  
+  jobject stateObj = env->GetObjectField(obj, field);
+  if (!stateObj) return STATE_DEFAULT;
+
+  int ordinal;
+  JNI_CALL_METHOD(env, stateObj, "ordinal", "()I", Int, ordinal);
+
+  switch (ordinal) {
+    case 0:
+      return STATE_DISABLED;
+    case 1:
+      return STATE_ENABLED;
+    case 2:
+    default:
+      return STATE_DEFAULT;
+  }
+}

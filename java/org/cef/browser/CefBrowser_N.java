@@ -127,23 +127,23 @@ public abstract class CefBrowser_N extends CefNativeAdapter implements CefBrowse
     @Override
     public synchronized CefBrowser getDevTools(Point inspectAt) {
         if (devTools_ == null) {
-            devTools_ = createDevToolsBrowser(client_, url_, request_context_, this, inspectAt);
+            devTools_ = createDevToolsBrowser(client_, url_, request_context_, this, inspectAt, new CefBrowserSettings());
         }
         return devTools_;
     }
 
     protected abstract CefBrowser_N createDevToolsBrowser(CefClient client, String url,
-            CefRequestContext context, CefBrowser_N parent, Point inspectAt);
+            CefRequestContext context, CefBrowser_N parent, Point inspectAt, CefBrowserSettings settings);
 
     /**
      * Create a new browser.
      */
     protected void createBrowser(CefClientHandler clientHandler, long windowHandle, String url,
-            boolean osr, boolean transparent, CefRequestContext context) {
+            boolean osr, boolean transparent, CefRequestContext context, CefBrowserSettings settings) {
         if (getNativeRef("CefBrowser") == 0 && !isPending_) {
             try {
                 N_CreateBrowser(
-                        clientHandler, windowHandle, url, osr, transparent, context);
+                        clientHandler, windowHandle, url, osr, transparent, context, settings);
             } catch (UnsatisfiedLinkError err) {
                 err.printStackTrace();
             }
@@ -162,11 +162,11 @@ public abstract class CefBrowser_N extends CefNativeAdapter implements CefBrowse
      */
     protected final void createDevTools(CefBrowser_N parent, CefClientHandler clientHandler,
             long windowHandle, boolean osr, boolean transparent,
-            Point inspectAt) {
+            Point inspectAt, CefBrowserSettings settings) {
         if (getNativeRef("CefBrowser") == 0 && !isPending_) {
             try {
                 isPending_ = N_CreateDevTools(
-                        parent, clientHandler, windowHandle, osr, transparent, inspectAt);
+                        parent, clientHandler, windowHandle, osr, transparent, inspectAt, settings);
             } catch (UnsatisfiedLinkError err) {
                 err.printStackTrace();
             }
@@ -738,9 +738,10 @@ public abstract class CefBrowser_N extends CefNativeAdapter implements CefBrowse
 
     private final native boolean N_CreateBrowser(CefClientHandler clientHandler, long windowHandle,
             String url, boolean osr, boolean transparent,
-            CefRequestContext context);
+            CefRequestContext context, CefBrowserSettings settings);
     private final native boolean N_CreateDevTools(CefBrowser parent, CefClientHandler clientHandler,
-            long windowHandle, boolean osr, boolean transparent, Point inspectAt);
+            long windowHandle, boolean osr, boolean transparent, 
+            Point inspectAt, CefBrowserSettings settings);
     private final native long N_GetWindowHandle(long surfaceHandle);
     private final native boolean N_CanGoBack();
     private final native void N_GoBack();
