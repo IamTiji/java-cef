@@ -12,7 +12,7 @@ if (Test-Path -Path $OUT_PATH_INT) {
 }
 New-Item -ItemType Directory -Path $OUT_PATH_INT | Out-Null
 New-Item -ItemType Directory -Path $OUT_PATH_INT/tests/detailed/handler | Out-Null
-New-Item -ItemType Directory -Path $OUT_PATH_INT/manifest | Out-Null
+New-Item -ItemType Directory -Path $OUT_PATH_INT/META-INF | Out-Null
 
 New-Item -ItemType Directory -Path $OUT_PATH -Force | Out-Null
 
@@ -21,10 +21,9 @@ New-Item -ItemType Directory -Path $OUT_PATH -Force | Out-Null
 javac -Xdiags:verbose -cp $CLS_PATH -d $OUT_PATH_INT -g (Get-ChildItem -Path ./java/* -Recurse -Include *.java)
 
 # Copy manifest and resources
-Copy-Item -Path .\java\manifest -Destination $OUT_PATH_INT\manifest\ -Recurse -Force
+Copy-Item -Path .\java\manifest\* -Destination $OUT_PATH_INT\META-INF\ -Recurse -Force
 Copy-Item -Path .\java\tests\detailed\handler\*.html -Destination $OUT_PATH_INT\tests\detailed\handler\ -Force
 Copy-Item -Path .\java\tests\detailed\handler\*.png -Destination $OUT_PATH_INT\tests\detailed\handler\ -Force
 
 # Compress to Jar file
-Compress-Archive -Path $OUT_PATH_INT -DestinationPath $OUT_PATH/tmp.zip -CompressionLevel NoCompression -Force
-Move-Item -Path $OUT_PATH/tmp.zip -Destination $OUT_PATH/jcef.jar -Force
+jar cvfm "$OUT_PATH/jcef.jar" "$OUT_PATH_INT/META-INF/MANIFEST.MF" -C "$OUT_PATH_INT" .
