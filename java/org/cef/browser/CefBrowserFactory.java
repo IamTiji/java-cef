@@ -12,6 +12,6 @@ import org.cef.CefClient;
 public class CefBrowserFactory {
     public static CefBrowser create(CefClient client, String url,
             boolean isTransparent, CefRequestContext context) {
-        return new CefBrowserOsr(client, url, isTransparent, context);
+        return new CefBrowserOsr(client, url, isTransparent, context, new CefBrowserSettings());
     }
 }

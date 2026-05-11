@@ -31,15 +31,26 @@ public class CefBrowserOsr extends CefBrowser_N implements CefRenderHandler {
     private int depth = 32;
     private int depth_per_component = 8;
     private boolean isTransparent_;
+    private CefBrowserSettings settings;
 
-    public CefBrowserOsr(CefClient client, String url, boolean transparent, CefRequestContext context) {
-        this(client, url, transparent, context, null, null);
+    public CefBrowserOsr(CefClient client, String url, boolean transparent, CefRequestContext context, CefBrowserSettings settings) {
+        this(client, url, transparent, context, null, null, settings);
     }
 
     private CefBrowserOsr(CefClient client, String url, boolean transparent,
-            CefRequestContext context, CefBrowserOsr parent, Point inspectAt) {
+            CefRequestContext context, CefBrowserOsr parent, Point inspectAt, CefBrowserSettings settings) {
         super(client, url, context, parent, inspectAt);
         isTransparent_ = transparent;
+        this.settings = settings;
+    }
+
+    public void setSettings(CefBrowserSettings settings) {
+        if (getNativeRef("CefBrowser") != 0L) throw new IllegalStateException("Cannot set settings after the browser has been created");
+        this.settings = settings;
+    }
+
+    public CefBrowserSettings getSettings() {
+        return settings;
     }
 
     @Override
@@ -133,10 +144,10 @@ public class CefBrowserOsr extends CefBrowser_N implements CefRenderHandler {
         if (getNativeRef("CefBrowser") == 0) {
             if (getParentBrowser() != null) {
                 createDevTools(getParentBrowser(), getClient(), windowHandle, true, isTransparent_,
-                        getInspectAt(), new CefBrowserSettings());
+                        getInspectAt(), settings);
             } else {
                 createBrowser(getClient(), windowHandle, getUrl(), true, isTransparent_,
-                        getRequestContext(), new CefBrowserSettings());
+                        getRequestContext(), settings);
             }
         } else if (hasParent && justCreated_) {
             notifyAfterParentChanged();
