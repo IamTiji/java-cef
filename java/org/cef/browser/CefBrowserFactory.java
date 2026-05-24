@@ -11,10 +11,7 @@ import org.cef.CefClient;
  * Creates a new instance of CefBrowser according the passed values
  */
 public class CefBrowserFactory {
-    public static CefBrowser create(CefClient client, String url, boolean isOffscreenRendered,
-            boolean isTransparent, CefRequestContext context, CefBrowserSettings settings) {
-        if (isOffscreenRendered)
-            return new CefBrowserOsr(client, url, isTransparent, context, settings);
+    public static CefBrowser create(CefClient client, String url, CefRequestContext context, CefBrowserSettings settings) {
         return new CefBrowserWr(client, url, context, settings);
     }
 }

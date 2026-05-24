@@ -234,8 +234,7 @@ public class MainFrame extends BrowserFrame {
         browserSettings.windowless_frame_rate = windowless_frame_rate;
 
         // Create the browser.
-        CefBrowser browser = client_.createBrowser("http://www.google.com", osrEnabled,
-                transparentPaintingEnabled, null, browserSettings);
+        CefBrowser browser = client_.createBrowser("http://www.google.com", null, browserSettings);
         setBrowser(browser);
 
         // Set up the UI for this example implementation.
