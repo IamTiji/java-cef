@@ -630,7 +630,7 @@ public abstract class CefBrowser_N extends CefNativeAdapter implements CefBrowse
      * Send a key event.
      * @param e The event to send.
      */
-    protected final void sendKeyEvent(KeyEvent e) {
+    public final void sendKeyEvent(KeyEvent e) {
         try {
             N_SendKeyEvent(e);
         } catch (UnsatisfiedLinkError ule) {
@@ -642,7 +642,7 @@ public abstract class CefBrowser_N extends CefNativeAdapter implements CefBrowse
      * Send a mouse event.
      * @param e The event to send.
      */
-    protected final void sendMouseEvent(MouseEvent e) {
+    public final void sendMouseEvent(MouseEvent e) {
         try {
             N_SendMouseEvent(e);
         } catch (UnsatisfiedLinkError ule) {
@@ -654,7 +654,7 @@ public abstract class CefBrowser_N extends CefNativeAdapter implements CefBrowse
      * Send a mouse wheel event.
      * @param e The event to send.
      */
-    protected final void sendMouseWheelEvent(MouseWheelEvent e) {
+    public final void sendMouseWheelEvent(MouseWheelEvent e) {
         try {
             N_SendMouseWheelEvent(e);
         } catch (UnsatisfiedLinkError ule) {
