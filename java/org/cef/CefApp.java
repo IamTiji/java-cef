@@ -485,7 +485,7 @@ public class CefApp extends CefAppHandlerAdapter {
     }
 
     /**
-     * Perform a single message loop iteration. Used on all platforms except
+     * Start a message loop. Used on all platforms except
      * Windows with windowed rendering.
      */
     public final void doMessageLoopWork(final long delay_ms) {
@@ -532,6 +532,14 @@ public class CefApp extends CefAppHandlerAdapter {
                 }
             }
         });
+    }
+
+    /**
+     * Performs single message loop iteration. It is up to developers to make sure that threads
+     * are correct. This method does not call itself again.
+     */
+    public final void rawMessageLoopWork() {
+        N_DoMessageLoopWork();
     }
 
     /**
