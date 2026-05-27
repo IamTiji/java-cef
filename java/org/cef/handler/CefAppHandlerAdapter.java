@@ -89,7 +89,7 @@ public abstract class CefAppHandlerAdapter implements CefAppHandler {
 
     @Override
     public void onScheduleMessagePumpWork(long delay_ms) {
-        CefApp.getInstance().doMessageLoopWork(delay_ms);
+        // The default implementation does nothing
     }
 
     @Override
