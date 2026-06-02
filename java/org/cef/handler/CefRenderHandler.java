@@ -7,6 +7,7 @@ package org.cef.handler;
 import org.cef.browser.CefBrowser;
 import org.cef.browser.CefPaintEvent;
 import org.cef.callback.CefDragData;
+import org.cef.misc.CefAcceleratedPaintInfo;
 
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -170,4 +171,14 @@ public interface CefRenderHandler {
      * @param operation Describes the allowed operation (none, move, copy, link).
      */
     public void updateDragCursor(CefBrowser browser, int operation);
+
+    /**
+     * Handles painting
+     *
+     * @param browser The browser generating the event.
+     * @param popup True if painting a popup window.
+     * @param dirtyRects Array of dirty regions.
+     * @param info Accelerated paint info.
+     */
+    public void onAcceleratedPaint(CefBrowser browser, boolean popup, Rectangle[] dirtyRects, CefAcceleratedPaintInfo info);
 }

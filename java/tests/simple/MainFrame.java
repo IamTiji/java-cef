@@ -78,7 +78,7 @@ public class MainFrame extends JFrame {
         });
         CefSettings settings = new CefSettings();
         settings.windowless_rendering_enabled = useOSR;
-        cefApp_ = CefApp.getInstance(settings);
+        cefApp_ = CefApp.getInstance(new String[] {"--shared-texture-enabled"}, settings);
 
         // (2) JCEF can handle one to many browser instances simultaneous. These
         //     browser instances are logically grouped together by an instance of

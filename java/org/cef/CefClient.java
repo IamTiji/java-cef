@@ -8,12 +8,10 @@ import org.cef.browser.*;
 import org.cef.callback.*;
 import org.cef.handler.*;
 import org.cef.misc.BoolRef;
+import org.cef.misc.CefAcceleratedPaintInfo;
 import org.cef.misc.CefPrintSettings;
-import org.cef.misc.StringRef;
 import org.cef.network.CefRequest;
 import org.cef.network.CefRequest.TransitionType;
-import org.cef.network.CefResponse;
-import org.cef.network.CefURLRequest;
 
 import java.awt.Component;
 import java.awt.Container;
@@ -731,6 +729,16 @@ public class CefClient extends CefClientHandler
         CefRenderHandler realHandler = browser.getRenderHandler();
         if (realHandler != null)
             realHandler.onPaint(browser, popup, dirtyRects, buffer, width, height);
+    }
+
+    @Override
+    public void onAcceleratedPaint(CefBrowser browser, boolean popup, Rectangle[] dirtyRects,
+                                   CefAcceleratedPaintInfo info) {
+        if (browser == null) return;
+
+        CefRenderHandler realHandler = browser.getRenderHandler();
+        if (realHandler != null)
+            realHandler.onAcceleratedPaint(browser, popup, dirtyRects, info);
     }
 
     @Override

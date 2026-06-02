@@ -270,6 +270,46 @@ void RenderHandler::OnPaint(CefRefPtr<CefBrowser> browser,
                        jdirectBuffer.get(), width, height);
 }
 
+void RenderHandler::OnAcceleratedPaint(CefRefPtr<CefBrowser> browser,
+                                       PaintElementType type,
+                                       const RectList& dirtyRects,
+                                       const CefAcceleratedPaintInfo& info) {
+  ScopedJNIEnv env;
+  if (!env)
+    return;
+
+  ScopedJNIBrowser jbrowser(env, browser);
+  jboolean jtype = type == PET_VIEW ? JNI_FALSE : JNI_TRUE;
+  ScopedJNIObjectLocal jrectArray(env, NewJNIRectArray(env, dirtyRects));
+
+  jclass clazz = env->FindClass("org/cef/misc/CefAcceleratedPaintInfo");
+  jmethodID mid = env->GetMethodID(clazz, "<init>", "()V");
+  jobject jinfo = env->NewObject(clazz, mid);
+
+  jfieldID fid = env->GetFieldID(clazz, "shared_texture_handle", "J");
+  env->SetLongField(jinfo, fid, reinterpret_cast<long long>(info.shared_texture_handle));
+
+  fid = env->GetFieldID(clazz, "format", "Lorg/cef/misc/CefAcceleratedPaintInfo$CefColorType;");
+  const char* formatName = "";
+  switch (info.format) {
+    case CEF_COLOR_TYPE_RGBA_8888:
+      formatName = "CEF_COLOR_TYPE_RGBA_8888";
+      break;
+    case CEF_COLOR_TYPE_BGRA_8888:
+      formatName = "CEF_COLOR_TYPE_BGRA_8888";
+      break;
+    default:
+      break;
+  }
+  env->SetObjectField(jinfo, fid, GetJNIEnumValue(env,
+    "org/cef/misc/CefAcceleratedPaintInfo", formatName));
+
+  JNI_CALL_VOID_METHOD(env, handle_, "onPaint",
+                       "(Lorg/cef/browser/CefBrowser;Z[Ljava/awt/"
+                       "Rectangle;Lorg/cef/misc/CefAcceleratedPaintInfo$CefColorType;)V",
+                       jbrowser.get(), jtype, jrectArray.get(), jinfo);
+}
+
 bool RenderHandler::StartDragging(CefRefPtr<CefBrowser> browser,
                                   CefRefPtr<CefDragData> drag_data,
                                   DragOperationsMask allowed_ops,

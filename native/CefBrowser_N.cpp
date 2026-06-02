@@ -999,6 +999,8 @@ void create(std::shared_ptr<JNIObjectsForCreate> objs,
   } else {
     windowInfo.SetAsWindowless((CefWindowHandle)windowHandle);
   }
+  // This requires shared-texture-enabled switch anyway so there isn't reason to disable it
+  windowInfo.shared_texture_enabled = true;
 
   if (transparent == JNI_FALSE) {
     // Specify an opaque background color (white) to disable transparency.
