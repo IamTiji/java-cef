@@ -997,7 +997,11 @@ void create(std::shared_ptr<JNIObjectsForCreate> objs,
     windowInfo.SetAsChild(parent, rect);
 #endif
   } else {
-    windowInfo.SetAsWindowless((CefWindowHandle)windowHandle);
+#if defined(OS_WIN)
+    windowInfo.SetAsWindowless(nullptr);
+#else
+    windowInfo.windowless = true;
+#endif
   }
   // This requires shared-texture-enabled switch anyway so there isn't reason to disable it
   windowInfo.shared_texture_enabled = true;
