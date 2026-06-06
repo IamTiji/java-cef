@@ -2,10 +2,16 @@ package tests.osr;
 
 import org.cef.CefApp;
 import org.cef.CefClient;
+import org.cef.handler.CefAppHandlerAdapter;
 
 public class Starter {
-    public static void main(String[] args) {
-        String[] cefArgs = {"--shared-texture-enabled", "--no-sandbox", "--disable-site-isolation"};
+    private static long nextTimer = -1;
+    private static final Object timerLock = new Object();
+
+    public static void main(String[] args) throws InterruptedException {
+        //Thread.sleep(10000);
+
+        String[] cefArgs = {"--shared-texture-enabled", "--no-sandbox", "--disable-features=ThreadNaming"};
 
         CefApp app = CefApp.getInstance(cefArgs);
         CefClient client = app.createClient();
@@ -13,14 +19,8 @@ public class Starter {
         TestBrowserImpl browser = new TestBrowserImpl(client, "google.com");
         browser.createImmediately();
 
-        for (int i = 0; i < 1000; i++) {
-            try {
-                Thread.sleep(10);
-                app.rawMessageLoopWork();
-            } catch (InterruptedException e) {
-                break;
-            }
-        }
+        System.out.println(Thread.currentThread());
+        app.runMessageLoop();
         browser.close(true);
         client.dispose();
         app.dispose();

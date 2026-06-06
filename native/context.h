@@ -32,6 +32,7 @@ class Context {
                   jobject jsettings);
   void OnContextInitialized();
   void DoMessageLoopWork();
+  void RunMessageLoop();
   void Shutdown();
 
  private:

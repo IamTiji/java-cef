@@ -116,6 +116,6 @@ public class TestBrowserImpl extends CefBrowser_N implements CefRenderHandler {
 
     @Override
     public void onAcceleratedPaint(CefBrowser browser, boolean popup, Rectangle[] dirtyRects, CefAcceleratedPaintInfo info) {
-
+        System.out.println(info.shared_texture_handle);
     }
 }

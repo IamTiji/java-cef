@@ -48,6 +48,11 @@ JNIEXPORT void JNICALL Java_org_cef_CefApp_N_1DoMessageLoopWork(JNIEnv* env,
   Context::GetInstance()->DoMessageLoopWork();
 }
 
+JNIEXPORT void JNICALL Java_org_cef_CefApp_N_1RunMessageLoop(JNIEnv* env,
+                                                             jobject) {
+  Context::GetInstance()->RunMessageLoop();
+}
+
 JNIEXPORT jobject JNICALL Java_org_cef_CefApp_N_1GetVersion(JNIEnv* env,
                                                             jobject obj) {
   return NewJNIObject(env, "org/cef/CefApp$CefVersion",

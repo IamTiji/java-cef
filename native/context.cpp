@@ -198,7 +198,7 @@ bool Context::Initialize(JNIEnv* env,
 
   // Use CefAppHandler.onScheduleMessagePumpWork to schedule calls to
   // DoMessageLoopWork.
-  settings.external_message_pump = external_message_pump_;
+  settings.external_message_pump = false;
 
   CefRefPtr<ClientApp> client_app(
       new ClientApp(CefString(&settings.cache_path), env, appHandler));
@@ -227,6 +227,12 @@ void Context::DoMessageLoopWork() {
 #else
   CefDoMessageLoopWork();
 #endif
+}
+
+void Context::RunMessageLoop() {
+  DCHECK(thread_checker_.CalledOnValidThread());
+
+  CefRunMessageLoop();
 }
 
 void Context::Shutdown() {

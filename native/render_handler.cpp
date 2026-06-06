@@ -302,11 +302,11 @@ void RenderHandler::OnAcceleratedPaint(CefRefPtr<CefBrowser> browser,
       break;
   }
   env->SetObjectField(jinfo, fid, GetJNIEnumValue(env,
-    "org/cef/misc/CefAcceleratedPaintInfo", formatName));
+    "org/cef/misc/CefAcceleratedPaintInfo$CefColorType", formatName));
 
-  JNI_CALL_VOID_METHOD(env, handle_, "onPaint",
+  JNI_CALL_VOID_METHOD(env, handle_, "onAcceleratedPaint",
                        "(Lorg/cef/browser/CefBrowser;Z[Ljava/awt/"
-                       "Rectangle;Lorg/cef/misc/CefAcceleratedPaintInfo$CefColorType;)V",
+                       "Rectangle;Lorg/cef/misc/CefAcceleratedPaintInfo;)V",
                        jbrowser.get(), jtype, jrectArray.get(), jinfo);
 }
 

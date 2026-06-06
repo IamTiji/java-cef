@@ -160,23 +160,8 @@ public class CefApp extends CefAppHandlerAdapter {
             appHandler_ = this;
         }
 
-        // Execute on the AWT event dispatching thread.
-        try {
-            Runnable r = new Runnable() {
-                @Override
-                public void run() {
-                    // Perform native pre-initialization.
-                    if (!N_PreInitialize())
-                        throw new IllegalStateException("Failed to pre-initialize native code");
-                }
-            };
-            if (SwingUtilities.isEventDispatchThread())
-                r.run();
-            else
-                SwingUtilities.invokeAndWait(r);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        if (!N_PreInitialize())
+            throw new IllegalStateException("Failed to pre-initialize native code");
     }
 
     /**
@@ -388,61 +373,48 @@ public class CefApp extends CefAppHandlerAdapter {
      */
     private final void initialize() {
         // Execute on the AWT event dispatching thread.
-        try {
-            Runnable r = new Runnable() {
-                @Override
-                public void run() {
-                    String library_path = getJcefLibPath();
-                    System.out.println("initialize on " + Thread.currentThread()
-                            + " with library path " + library_path);
+        String library_path = getJcefLibPath();
+        System.out.println("initialize on " + Thread.currentThread()
+                + " with library path " + library_path);
 
-                    CefSettings settings = settings_ != null ? settings_ : new CefSettings();
+        CefSettings settings = settings_ != null ? settings_ : new CefSettings();
 
-                    // Avoid to override user values by testing on NULL
-                    if (OS.isMacintosh()) {
-                        if (settings.browser_subprocess_path == null) {
-                            Path path = Paths.get(library_path,
-                                    "../Frameworks/jcef Helper.app/Contents/MacOS/jcef Helper");
-                            settings.browser_subprocess_path =
-                                    path.normalize().toAbsolutePath().toString();
-                        }
-                    } else if (OS.isWindows()) {
-                        if (settings.browser_subprocess_path == null) {
-                            Path path = Paths.get(library_path, "jcef_helper.exe");
-                            settings.browser_subprocess_path =
-                                    path.normalize().toAbsolutePath().toString();
-                        }
-                    } else if (OS.isLinux()) {
-                        if (settings.browser_subprocess_path == null) {
-                            Path path = Paths.get(library_path, "jcef_helper");
-                            settings.browser_subprocess_path =
-                                    path.normalize().toAbsolutePath().toString();
-                        }
-                        if (settings.resources_dir_path == null) {
-                            Path path = Paths.get(library_path);
-                            settings.resources_dir_path =
-                                    path.normalize().toAbsolutePath().toString();
-                        }
-                        if (settings.locales_dir_path == null) {
-                            Path path = Paths.get(library_path, "locales");
-                            settings.locales_dir_path =
-                                    path.normalize().toAbsolutePath().toString();
-                        }
-                    }
+        // Avoid to override user values by testing on NULL
+        if (OS.isMacintosh()) {
+            if (settings.browser_subprocess_path == null) {
+                Path path = Paths.get(library_path,
+                        "../Frameworks/jcef Helper.app/Contents/MacOS/jcef Helper");
+                settings.browser_subprocess_path =
+                        path.normalize().toAbsolutePath().toString();
+            }
+        } else if (OS.isWindows()) {
+            if (settings.browser_subprocess_path == null) {
+                Path path = Paths.get(library_path, "jcef_helper.exe");
+                settings.browser_subprocess_path =
+                        path.normalize().toAbsolutePath().toString();
+            }
+        } else if (OS.isLinux()) {
+            if (settings.browser_subprocess_path == null) {
+                Path path = Paths.get(library_path, "jcef_helper");
+                settings.browser_subprocess_path =
+                        path.normalize().toAbsolutePath().toString();
+            }
+            if (settings.resources_dir_path == null) {
+                Path path = Paths.get(library_path);
+                settings.resources_dir_path =
+                        path.normalize().toAbsolutePath().toString();
+            }
+            if (settings.locales_dir_path == null) {
+                Path path = Paths.get(library_path, "locales");
+                settings.locales_dir_path =
+                        path.normalize().toAbsolutePath().toString();
+            }
+        }
 
-                    if (N_Initialize(appHandler_, settings)) {
-                        setState(CefAppState.INITIALIZED);
-                    } else {
-                        setState(CefAppState.INITIALIZATION_FAILED);
-                    }
-                }
-            };
-            if (SwingUtilities.isEventDispatchThread())
-                r.run();
-            else
-                SwingUtilities.invokeAndWait(r);
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (N_Initialize(appHandler_, settings)) {
+            setState(CefAppState.INITIALIZED);
+        } else {
+            setState(CefAppState.INITIALIZATION_FAILED);
         }
     }
 
@@ -452,36 +424,22 @@ public class CefApp extends CefAppHandlerAdapter {
      */
     protected final void handleBeforeTerminate() {
         System.out.println("Cmd+Q termination request.");
-        // Execute on the AWT event dispatching thread. Always call asynchronously
-        // so the call stack has a chance to unwind.
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                CefAppHandler handler =
-                        (CefAppHandler) ((appHandler_ == null) ? this : appHandler_);
-                if (!handler.onBeforeTerminate()) dispose();
-            }
-        });
+        CefAppHandler handler =
+                (appHandler_ == null) ? this : appHandler_;
+        if (!handler.onBeforeTerminate()) dispose();
     }
 
     /**
      * Shut down the context.
      */
     private final void shutdown() {
-        // Execute on the AWT event dispatching thread. Always call asynchronously
-        // so the call stack has a chance to unwind.
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                System.out.println("shutdown on " + Thread.currentThread());
+        System.out.println("shutdown on " + Thread.currentThread());
 
-                // Shutdown native CEF.
-                N_Shutdown();
+        // Shutdown native CEF.
+        N_Shutdown();
 
-                setState(CefAppState.TERMINATED);
-                CefApp.self = null;
-            }
-        });
+        setState(CefAppState.TERMINATED);
+        CefApp.self = null;
     }
 
     /**
@@ -540,6 +498,17 @@ public class CefApp extends CefAppHandlerAdapter {
      */
     public final void rawMessageLoopWork() {
         N_DoMessageLoopWork();
+    }
+
+    /**
+     * Run the CEF message loop. Use this function instead of an application- provided
+     * message loop to get the best balance between performance and CPU usage. This
+     * function should only be called on the main application thread and only if
+     * CefInitialize() is called with a cef_settings_t.multi_threaded_message_loop value of
+     * false. This function will block until a quit message is received by the system.
+     */
+    public final void runMessageLoop() {
+        N_RunMessageLoop();
     }
 
     /**
@@ -602,6 +571,7 @@ public class CefApp extends CefAppHandlerAdapter {
     private final native boolean N_Initialize(CefAppHandler appHandler, CefSettings settings);
     private final native void N_Shutdown();
     private final native void N_DoMessageLoopWork();
+    private final native void N_RunMessageLoop();
     private final native CefVersion N_GetVersion();
     private final native boolean N_RegisterSchemeHandlerFactory(
             String schemeName, String domainName, CefSchemeHandlerFactory factory);
