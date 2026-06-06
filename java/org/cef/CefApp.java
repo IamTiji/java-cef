@@ -508,6 +508,8 @@ public class CefApp extends CefAppHandlerAdapter {
      * false. This function will block until a quit message is received by the system.
      */
     public final void runMessageLoop() {
+        System.out.println("runMessageLoop on " + Thread.currentThread());
+
         N_RunMessageLoop();
     }
 
