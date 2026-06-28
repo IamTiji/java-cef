@@ -73,7 +73,7 @@ public class TestRenderHandlerImpl implements CefRenderHandler {
     }
 
     @Override
-    public void onAcceleratedPaint(CefBrowser browser, boolean popup, Rectangle[] dirtyRects, CefAcceleratedPaintInfo info) {
+    public void onAcceleratedPaint(CefBrowser browser, boolean popup, Rectangle[] dirtyRects, CefAcceleratedPaintInfo info, int width, int height) {
         System.out.println(info.shared_texture_handle);
     }
 }

@@ -6,6 +6,7 @@ package org.cef.handler;
 
 import org.cef.browser.CefBrowser;
 import org.cef.callback.CefDragData;
+import org.cef.misc.CefAcceleratedPaintInfo;
 
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -41,6 +42,10 @@ public abstract class CefRenderHandlerAdapter implements CefRenderHandler {
     @Override
     public void onPaint(CefBrowser browser, boolean popup, Rectangle[] dirtyRects,
             ByteBuffer buffer, int width, int height) {}
+
+    @Override
+    public void onAcceleratedPaint(CefBrowser browser, boolean popup, Rectangle[] dirtyRects,
+                                   CefAcceleratedPaintInfo info, int width, int height) {}
 
     @Override
     public boolean onCursorChange(CefBrowser browser, int cursorType) {

@@ -306,8 +306,9 @@ void RenderHandler::OnAcceleratedPaint(CefRefPtr<CefBrowser> browser,
 
   JNI_CALL_VOID_METHOD(env, handle_, "onAcceleratedPaint",
                        "(Lorg/cef/browser/CefBrowser;Z[Ljava/awt/"
-                       "Rectangle;Lorg/cef/misc/CefAcceleratedPaintInfo;)V",
-                       jbrowser.get(), jtype, jrectArray.get(), jinfo);
+                       "Rectangle;Lorg/cef/misc/CefAcceleratedPaintInfo;II)V",
+                       jbrowser.get(), jtype, jrectArray.get(), jinfo,
+                       info.extra.coded_size.width, info.extra.coded_size.height);
 }
 
 bool RenderHandler::StartDragging(CefRefPtr<CefBrowser> browser,

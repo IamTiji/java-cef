@@ -180,5 +180,6 @@ public interface CefRenderHandler {
      * @param dirtyRects Array of dirty regions.
      * @param info Accelerated paint info.
      */
-    public void onAcceleratedPaint(CefBrowser browser, boolean popup, Rectangle[] dirtyRects, CefAcceleratedPaintInfo info);
+    public void onAcceleratedPaint(CefBrowser browser, boolean popup, Rectangle[] dirtyRects,
+                                   CefAcceleratedPaintInfo info, int width, int height);
 }
