@@ -8,6 +8,8 @@ import org.cef.CefSettings;
 import org.cef.browser.CefBrowser;
 import org.cef.browser.CefFrame;
 
+import java.util.Vector;
+
 /**
  * An abstract adapter class for receiving display events.
  * The methods in this class are empty.
@@ -48,5 +50,15 @@ public abstract class CefDisplayHandlerAdapter implements CefDisplayHandler {
     @Override
     public boolean onCursorChange(CefBrowser browser, int cursorType) {
         return false;
+    }
+
+    @Override
+    public void onFaviconURLChange(CefBrowser browser, Vector<String> urls) {
+        return;
+    }
+
+    @Override
+    public void onLoadProgressChange(CefBrowser browser, double progress) {
+        return;
     }
 }

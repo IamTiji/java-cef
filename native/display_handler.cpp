@@ -144,3 +144,29 @@ bool DisplayHandler::OnCursorChange(CefRefPtr<CefBrowser> browser,
 
   return (jreturn != JNI_FALSE);
 }
+
+void DisplayHandler::OnFaviconURLChange(CefRefPtr<CefBrowser> browser,
+                        const std::vector<CefString>& icon_urls) {
+  ScopedJNIEnv env;
+  if (!env) return;
+
+  ScopedJNIBrowser jbrowser(env, browser);
+
+  jobject vect = NewJNIStringVector(env, icon_urls);
+
+  JNI_CALL_VOID_METHOD(env, handle_, "onFaviconURLChange",
+                  "(Lorg/cef/browser/CefBrowser;Ljava/util/Vector;)V",
+                  jbrowser.get(), vect);
+}
+
+void DisplayHandler::OnLoadingProgressChange(CefRefPtr<CefBrowser> browser,
+                             double progress) {
+  ScopedJNIEnv env;
+  if (!env) return;
+
+  ScopedJNIBrowser jbrowser(env, browser);
+
+  JNI_CALL_VOID_METHOD(env, handle_, "onLoadProgressChange",
+                  "(Lorg/cef/browser/CefBrowser;D)V",
+                  jbrowser.get(), progress);
+}

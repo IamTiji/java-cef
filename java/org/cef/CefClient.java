@@ -323,6 +323,26 @@ public class CefClient extends CefClientHandler
         return false;
     }
 
+    @Override
+    public void onFaviconURLChange(CefBrowser browser, Vector<String> urls) {
+        if (browser == null)
+            return;
+
+        if (displayHandler_ != null) {
+            displayHandler_.onFaviconURLChange(browser, urls);
+        }
+    }
+
+    @Override
+    public void onLoadProgressChange(CefBrowser browser, double progress) {
+        if (browser == null)
+            return;
+
+        if (displayHandler_ != null) {
+            displayHandler_.onLoadProgressChange(browser, progress);
+        }
+    }
+
     // CefDownloadHandler
 
     public CefClient addDownloadHandler(CefDownloadHandler handler) {

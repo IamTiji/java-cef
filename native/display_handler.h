@@ -37,7 +37,10 @@ class DisplayHandler : public CefDisplayHandler {
                       CefCursorHandle cursor,
                       cef_cursor_type_t type,
                       const CefCursorInfo& custom_cursor_info) override;
-
+  void OnFaviconURLChange(CefRefPtr<CefBrowser> browser,
+                          const std::vector<CefString>& icon_urls) override;
+  void OnLoadingProgressChange(CefRefPtr<CefBrowser> browser,
+                               double progress) override;
  protected:
   ScopedJNIObjectGlobal handle_;
 

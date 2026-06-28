@@ -8,6 +8,8 @@ import org.cef.CefSettings;
 import org.cef.browser.CefBrowser;
 import org.cef.browser.CefFrame;
 
+import java.util.Vector;
+
 /**
  * Implement this interface to handle events related to browser display state.
  * The methods of this class will be called on the UI thread.
@@ -69,4 +71,16 @@ public interface CefDisplayHandler {
      * @return true if the cursor change was handled.
      */
     public boolean onCursorChange(CefBrowser browser, int cursorType);
+
+    /**
+     * Called when the page icon changes.
+     */
+    public void onFaviconURLChange(CefBrowser browser, Vector<String> urls);
+
+    /**
+     * Called when the overall page loading progress has changed.
+     *
+     * @param progress ranges from 0.0 to 1.0.
+     */
+    public void onLoadProgressChange(CefBrowser browser, double progress);
 }
